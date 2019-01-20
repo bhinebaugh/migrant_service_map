@@ -1,10 +1,11 @@
 import React from "react";
+import "../index.css";
 import mapboxgl from "mapbox-gl";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
-import "../index.css";
 import Menu from "./Menu/Menu";
 import { insertPopup, Popup } from "./PopUp.js";
 import { providerToLayerName } from "../main.js";
+import * as turf from "@turf/turf";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
@@ -20,6 +21,7 @@ class Map extends React.Component {
     this.mapContainer = React.createRef();
     this.handleMenuItemClick = this.handleMenuItemClick.bind(this);
     this.toggleMapIcons = this.toggleMapIcons.bind(this);
+    this.newSymbolLayer = this.newSymbolLayer.bind(this);
   }
 
   handleMenuItemClick(provider) {
@@ -104,6 +106,31 @@ class Map extends React.Component {
       layerNames.map(layer =>
         map.setLayoutProperty(layer, "visibility", "none")
       );
+
+      this.map.addSource("filteredFeatures", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: [this.state.providers[0]]
+        }
+      });
+
+      this.map.addLayer({
+        id: "filteredByDistance",
+        source: "filteredFeatures",
+        type: "circle",
+        paint: {
+          "circle-radius": 5,
+          "circle-color": "#338f9f"
+        }
+      });
+    });
+  }
+
+  newSymbolLayer(features) {
+    this.map.getSource("filteredFeatures").setData({
+      type: "FeatureCollection",
+      features: features
     });
   }
 
@@ -119,6 +146,7 @@ class Map extends React.Component {
           serviceTypes={this.state.serviceTypes}
           toggleMapIcons={this.toggleMapIcons}
           handleMenuItemClick={this.handleMenuItemClick}
+          newSymbolLayer={this.newSymbolLayer}
         />
         <div id="map" className="map" ref={el => (this.mapContainer = el)} />
       </div>
