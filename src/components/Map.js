@@ -115,13 +115,21 @@ class Map extends React.Component {
         }
       });
 
+      this.map.loadImage(
+        "https://img.icons8.com/material/24/000000/logo.png",
+        function(error, image) {
+          if (error) throw error;
+          map.addImage("distance", image);
+        }
+      );
+
       this.map.addLayer({
         id: "filteredByDistance",
         source: "filteredFeatures",
-        type: "circle",
-        paint: {
-          "circle-radius": 5,
-          "circle-color": "#338f9f"
+        type: "symbol",
+        layout: {
+          "icon-image": "distance",
+          "icon-size": 1
         }
       });
     });
