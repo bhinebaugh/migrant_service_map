@@ -13,6 +13,10 @@ class Map extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      providerFilters: {
+        acceptingNewClients: false,
+        // selected service type could go here as well
+      },
       providers: [],
       serviceTypes: []
     };
@@ -20,6 +24,7 @@ class Map extends React.Component {
     this.mapContainer = React.createRef();
     this.handleMenuItemClick = this.handleMenuItemClick.bind(this);
     this.toggleMapIcons = this.toggleMapIcons.bind(this);
+    this.toggleAcceptingClients = this.toggleAcceptingClients.bind(this);
   }
 
   handleMenuItemClick(provider) {
@@ -51,6 +56,16 @@ class Map extends React.Component {
     } else {
       console.log("not a layer");
     }
+  }
+
+  toggleAcceptingClients() {
+    this.setState({
+      providerFilters: {
+        acceptingNewClients: !this.state.providerFilters.acceptingNewClients
+      }
+    },
+    () => console.log('set accepting-new-clients filter to', this.state.providerFilters.acceptingNewClients)
+    );
   }
 
   componentDidMount() {
@@ -118,6 +133,8 @@ class Map extends React.Component {
           providers={this.state.providers}
           serviceTypes={this.state.serviceTypes}
           toggleMapIcons={this.toggleMapIcons}
+          limitToAcceptingClients={this.state.providerFilters.acceptingNewClients}
+          toggleAcceptingClients={this.toggleAcceptingClients}
           handleMenuItemClick={this.handleMenuItemClick}
         />
         <div id="map" className="map" ref={el => (this.mapContainer = el)} />

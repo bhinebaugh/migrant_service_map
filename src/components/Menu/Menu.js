@@ -1,16 +1,27 @@
 import React, { Component } from "react";
 import DropdownMenu from "./DropdownMenu";
 import DropdownMenuItem from "./DropdownMenuItem";
+import FilterByAcceptingClients from "../FilterByAcceptingClients";
 
 export default class Menu extends Component {
   render() {
-    const { providers, serviceTypes } = this.props;
+    const { providers, serviceTypes, limitToAcceptingClients } = this.props;
 
-    const filteredProvidersList = type =>
-      providers.filter(provider => provider.properties.type === type);
+    const filteredProvidersList = type => {
+      // which property indicates whether a provider is accepting?
+      // for now, simply returning providers with odd-numbered id's
+      // to demonstrate that state and list update when checkbox is clicked
+      return (limitToAcceptingClients === true)
+        ? providers.filter(provider => (provider.properties.type === type) && (provider.id % 2) )
+        : providers.filter(provider => provider.properties.type === type)
+     }
 
     return (
       <div className="side-menu">
+        <FilterByAcceptingClients
+          shouldBeActive={limitToAcceptingClients}
+          toggleAcceptingClients={this.props.toggleAcceptingClients}
+        />
         <DropdownMenu text="Service Type" {...this.props}>
           {serviceTypes.map((serviceType, index) => (
             <DropdownMenu text={serviceType} key={index} {...this.props}>
