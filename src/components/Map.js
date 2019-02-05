@@ -6,6 +6,7 @@ import Menu from "./Menu/Menu";
 import { insertPopup, Popup } from "./PopUp.js";
 import { providerToLayerName } from "../main.js";
 import * as turf from "@turf/turf";
+import DistanceFilter from "./DistanceFilter";
 
 mapboxgl.accessToken =
   "pk.eyJ1IjoicmVmdWdlZXN3ZWxjb21lIiwiYSI6ImNqZ2ZkbDFiODQzZmgyd3JuNTVrd3JxbnAifQ.UY8Y52GQKwtVBXH2ssbvgw";
@@ -15,7 +16,9 @@ class Map extends React.Component {
     super(props);
     this.state = {
       providers: [],
-      serviceTypes: []
+      serviceTypes: [],
+      filteredProviders: [],
+      mapCenter: [-71.066954, 42.359947]
     };
     this.map = null;
     this.mapContainer = React.createRef();
@@ -111,7 +114,7 @@ class Map extends React.Component {
         type: "geojson",
         data: {
           type: "FeatureCollection",
-          features: [this.state.providers[0]]
+          features: this.state.filteredProviders
         }
       });
 
@@ -133,28 +136,62 @@ class Map extends React.Component {
         }
       });
     });
+
   }
 
-  newSymbolLayer(features) {
+  newSymbolLayer() {
+    console.log("newsymbollayer");
     this.map.getSource("filteredFeatures").setData({
       type: "FeatureCollection",
-      features: features
+      features: this.state.filteredProviders
     });
   }
 
+  setFilter = e => {
+    const distance = e.target.value;
+    const distances = this.state.providers.map(provider => {
+      return {
+        provider: provider,
+        distance: turf.distance(
+          turf.point(provider.geometry.coordinates),
+          turf.point(this.state.mapCenter)
+        )
+      };
+    });
+
+    const closePlaces = distances
+      .filter(el => el.distance < distance)
+      .map(el => el.provider);
+
+    this.setState((state) => { return {
+      filteredProviders: closePlaces,
+      distanceVisible: distance
+    }}, this.newSymbolLayer);
+   
+    console.log("filteredProviders " + this.state.filteredProviders.length)
+    // this.newSymbolLayer();
+  };
+
+
+
   componentWillUnmount() {
+    // this.newSymbolLayer();
     this.map.remove();
   }
 
   render() {
     return (
       <div className="map-container">
+        <DistanceFilter
+          filterDistance={this.setFilter}
+          providers={this.state.providers}
+        />
         <Menu
           providers={this.state.providers}
           serviceTypes={this.state.serviceTypes}
           toggleMapIcons={this.toggleMapIcons}
           handleMenuItemClick={this.handleMenuItemClick}
-          newSymbolLayer={this.newSymbolLayer}
+          setFilter={this.setFilter}
         />
         <div id="map" className="map" ref={el => (this.mapContainer = el)} />
       </div>
@@ -164,13 +201,13 @@ class Map extends React.Component {
 
 export default Map;
 
-/*     // map.addSource('single-point', {
-        //     "type": "geojson",
-        //     "data": {
-        //         "type": "FeatureCollection",
-        //         "features": []
-        //     }
-        // });
+/* map.addSource('single-point', {
+            "type": "geojson",
+            "data": {
+                "type": "FeatureCollection",
+                "features": []
+            }
+        });
         map.addLayer({
             "id": "point",
             "source": "single-point",
@@ -268,4 +305,5 @@ export default Map;
                     "line-offset": 5
                 },
                 "layout": {}
-            });*/
+            });
+*/

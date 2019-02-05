@@ -10,36 +10,14 @@ export default class DistanceFilter extends Component {
       distanceVisible: []
     };
   }
-
-  setFilter = e => {
-    let { filterDistance, searchCenter, providers } = this.props;
-    const distance = e.target.value;
-    const distances = providers.map(provider => {
-      return {
-        provider: provider,
-        distance: turf.distance(
-          turf.point(provider.geometry.coordinates),
-          turf.point(searchCenter)
-        )
-      };
-    });
-    const closePlaces = distances
-      .filter(el => el.distance < distance)
-      .map(el => el.provider);
-
-    console.log(closePlaces);
-
-    filterDistance(closePlaces);
-
-    this.setState({ distanceVisible: distance });
-  };
-
+  
   clearFilter = () => {
     let { filterDistance, providers } = this.props;
     filterDistance(providers);
   };
 
   render() {
+    let { filterDistance } = this.props; 
     const distances = [1, 2, 5];
     return (
       <ul>
@@ -51,7 +29,7 @@ export default class DistanceFilter extends Component {
                 name={"distance"}
                 id={el}
                 value={el}
-                onChange={e => this.setFilter(e)}
+                onChange={e => filterDistance(e)}
                 checked={this.state.distanceVisible === el}
               />
             <label htmlFor={el}>{el + " miles"}</label>
