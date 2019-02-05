@@ -18,6 +18,7 @@ class Map extends React.Component {
       providers: [],
       serviceTypes: [],
       filteredProviders: [],
+      distanceVisible: 5,
       mapCenter: [-71.066954, 42.359947]
     };
     this.map = null;
@@ -193,9 +194,9 @@ class Map extends React.Component {
     return (
       <div className="map-container">
         <DistanceFilter
-          filterDistance={this.setFilter}
           clearFilter={this.clearFilter}
-          providers={this.state.providers}
+          changeFilterDistance={this.setFilter}
+          distanceVisible={this.state.distanceVisible}
         />
         <Menu
           providers={this.state.providers}
