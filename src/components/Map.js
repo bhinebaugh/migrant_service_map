@@ -24,6 +24,7 @@ class Map extends React.Component {
     this.mapContainer = React.createRef();
     this.handleMenuItemClick = this.handleMenuItemClick.bind(this);
     this.toggleMapIcons = this.toggleMapIcons.bind(this);
+    this.clearFilter = this.clearFilter.bind(this);
     this.newSymbolLayer = this.newSymbolLayer.bind(this);
   }
 
@@ -57,6 +58,8 @@ class Map extends React.Component {
       console.log("not a layer");
     }
   }
+
+ 
 
   componentDidMount() {
     console.log("map comp loaded");
@@ -147,6 +150,13 @@ class Map extends React.Component {
     });
   }
 
+  clearFilter(){
+    this.setState((state) => { return {
+      filteredProviders: state.providers, 
+      distanceVisible: ""
+    }}, this.newSymbolLayer); 
+  }
+
   setFilter = e => {
     const distance = e.target.value;
     const distances = this.state.providers.map(provider => {
@@ -184,6 +194,7 @@ class Map extends React.Component {
       <div className="map-container">
         <DistanceFilter
           filterDistance={this.setFilter}
+          clearFilter={this.clearFilter}
           providers={this.state.providers}
         />
         <Menu
