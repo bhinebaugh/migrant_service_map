@@ -17,6 +17,7 @@ export default function getProvidersByDistance( searchCenter, providers, distanc
 
     const closePlaces = distances
       .filter(el => el.distance < distance)
+      .sort( (ela,elb) => ela.distance - elb.distance )
       .map(el => el.provider);
 
     console.log(closePlaces.length, "of", providers.length, "within", distance, "miles");

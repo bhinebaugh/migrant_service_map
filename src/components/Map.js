@@ -118,8 +118,8 @@ class Map extends React.Component {
       accessToken: mapboxgl.accessToken
     });
 
-    geocoder.on("result", function(ev) {
-      setSearchCenter(ev.result.geometry.coordinates);
+    geocoder.on("result", (ev) => {
+      this.props.setSearchCenter(ev.result.geometry.coordinates);
 
       if (map.getLayer("circle-outline")) {
         map.removeLayer("circle-outline");
