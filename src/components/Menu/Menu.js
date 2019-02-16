@@ -18,8 +18,8 @@ export function Menu({ providerTypes, filterProviders, toggleProviderVisibility 
           let providers = serviceType.providers;
 
           
-          // if distance filter is active, sort by closest, otherwise alphabetical
-          if (filterProviders.distance) {
+          // if search center is set, sort by closest, otherwise alphabetical
+          if (filterProviders.searchCenter) {
             providers = getProvidersByDistance(filterProviders.searchCenter, providers, filterProviders.distance);
           } else {
             providers.sort((a,b) => a["Organization Name"].localeCompare(b["Organization Name"]))
