@@ -2,10 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
   clearDistanceFilter,
-  changeDistanceFilter,
-  setFilteredProviders
+  changeDistanceFilter
 } from "../../actions";
-import getProvidersByDistance from "../../selectors";
 
 class DistanceFilter extends Component {
   render() {
@@ -25,7 +23,7 @@ class DistanceFilter extends Component {
                   this.props.changeDistanceFilter(el);
                 }}
           
-                checked={this.props.filterProviders.distance === el}
+                checked={this.props.limitBy.distance === el}
               />  
               <label htmlFor={el}>{el} mile{el > 1 ? "s" : ""}
               </label>
@@ -39,6 +37,6 @@ class DistanceFilter extends Component {
 }
 
 export default connect(
-  ({ providerTypes, filterProviders }) => ({ providerTypes, filterProviders }),
-  { clearDistanceFilter, changeDistanceFilter, setFilteredProviders }
+  ({ providerTypes, limitBy }) => ({ providerTypes, limitBy }),
+  { clearDistanceFilter, changeDistanceFilter }
 )(DistanceFilter);

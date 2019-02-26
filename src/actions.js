@@ -2,7 +2,7 @@ export const INITIALIZE_PROVIDERS = 'INITIALIZE_PROVIDERS';
 export const TOGGLE_TYPE = 'TOGGLE_TYPE';
 export const CHANGE_DISTANCE = 'CHANGE_DISTANCE';
 export const CLEAR_DISTANCE = 'CLEAR_DISTANCE';
-export const SET_SEARCH_CENTER = 'SET_SEARCH_CENTER';
+export const SET_REF_LOCATION = 'SET_REF_LOCATION';
 export const FILTER_PROVIDERS = 'FILTER_PROVIDERS';
 
 export function initializeProviders(providers) {
@@ -34,7 +34,7 @@ export function clearDistanceFilter() {
 
 export function setSearchCenter(coordinates) {
   return {
-    type: SET_SEARCH_CENTER,
+    type: SET_REF_LOCATION,
     coordinates
   }
 }

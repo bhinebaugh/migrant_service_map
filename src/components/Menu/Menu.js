@@ -8,7 +8,7 @@ import getProvidersByDistance from '../../selectors';
 
 import './side-menu.css';
 
-export function Menu({ providerTypes, filterProviders, toggleProviderVisibility }) {
+export function Menu({ providerTypes, limitBy, toggleProviderVisibility }) {
   return (
     <div className="side-menu">
       <div className="service-providers">
@@ -19,11 +19,11 @@ export function Menu({ providerTypes, filterProviders, toggleProviderVisibility 
 
           
           // if search center is set, sort by closest, otherwise alphabetical
-          if (filterProviders.distance) {
-            providers = getProvidersByDistance(filterProviders.searchCenter, providers, filterProviders.distance);
+          if (limitBy.distance) {
+            providers = getProvidersByDistance(limitBy.proximity.refLocation, providers, limitBy.distance);
 
           } else {
-            providers.sort((a,b) => a["Organization Name"].localeCompare(b["Organization Name"]))
+            providers.sort((a,b) => a.name.localeCompare(b.name))
           }
         
 
@@ -33,7 +33,7 @@ export function Menu({ providerTypes, filterProviders, toggleProviderVisibility 
               providers.map((provider, i) => (
               <DropdownMenuItem
                 key={i}
-                text={provider["Organization Name"]}
+                text={provider.name}
                 item={provider}
                 // clickHandler={this.props.handleMenuItemClick}
               />))
@@ -46,4 +46,4 @@ export function Menu({ providerTypes, filterProviders, toggleProviderVisibility 
   );
 }
 
-export default connect(({ providerTypes, filterProviders }) => ({ providerTypes, filterProviders }), { toggleProviderVisibility })(Menu);
+export default connect(({ providerTypes, limitBy }) => ({ providerTypes, limitBy }), { toggleProviderVisibility })(Menu);
