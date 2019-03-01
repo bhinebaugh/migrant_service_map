@@ -55,7 +55,7 @@ class Map extends React.Component {
   };
 
   updateSource = type => {
-    let { distance, refLocation } = this.props.limitBy;
+    let { distance, centerPoint centerCoordinates } = this.props .searchCenter .filters .proximity .geoboundary .georadius .area .radius .circle ;
 
     if (!this.map.getSource(type.id)) {
       this.addSourceToMap(type.id);
@@ -331,6 +331,6 @@ class Map extends React.Component {
 }
 
 export default connect(
-  ({ providerTypes, limitBy }) => ({ providerTypes, limitBy }),
+  ({ providerTypes, filters }) => ({ providerTypes, filters }),
   { initializeProviders, toggleProviderVisibility, setRefLocation }
 )(Map);

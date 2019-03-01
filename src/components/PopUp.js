@@ -163,4 +163,4 @@ export const IndicatorCheck = props => {
   );
 };
 
-export default connect(({ providerTypes, limitBy }) => ({ providerTypes, limitBy }), {  })(Popup);
+export default connect(({ providerTypes, filters }) => ({ providerTypes, filters }), {  })(Popup);

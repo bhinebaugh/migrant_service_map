@@ -23,7 +23,7 @@ class DistanceFilter extends Component {
                   this.props.changeDistanceFilter(el);
                 }}
           
-                checked={this.props.limitBy.distance === el}
+                checked={this.props.filters.distance === el}
               />  
               <label htmlFor={el}>{el} mile{el > 1 ? "s" : ""}
               </label>
@@ -37,6 +37,6 @@ class DistanceFilter extends Component {
 }
 
 export default connect(
-  ({ providerTypes, limitBy }) => ({ providerTypes, limitBy }),
+  ({ providerTypes, filters }) => ({ providerTypes, filters }),
   { clearDistanceFilter, changeDistanceFilter }
 )(DistanceFilter);
