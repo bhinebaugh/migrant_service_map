@@ -8,7 +8,7 @@ import getProvidersByDistance from '../../selectors';
 
 import './side-menu.css';
 
-export function Menu({ providerTypes, filters, toggleProviderVisibility }) {
+export function Menu({ providerTypes, filters, search, toggleProviderVisibility }) {
   return (
     <div className="side-menu">
       <div className="service-providers">
@@ -20,7 +20,7 @@ export function Menu({ providerTypes, filters, toggleProviderVisibility }) {
           
           // if search center is set, sort by closest, otherwise alphabetical
           if (filters.distance) {
-            providers = getProvidersByDistance(filters.proximity.refLocation, providers, filters.distance);
+            providers = getProvidersByDistance(search.coordinates, providers, filters.distance);
 
           } else {
             providers.sort((a,b) => a.name.localeCompare(b.name))
@@ -46,4 +46,4 @@ export function Menu({ providerTypes, filters, toggleProviderVisibility }) {
   );
 }
 
-export default connect(({ providerTypes, filters }) => ({ providerTypes, filters }), { toggleProviderVisibility })(Menu);
+export default connect(({ providerTypes, filters, search }) => ({ providerTypes, filters, search }), { toggleProviderVisibility })(Menu);

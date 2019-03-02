@@ -4,7 +4,7 @@ import mapboxgl from "mapbox-gl";
 import {
   initializeProviders,
   toggleProviderVisibility,
-  setRefLocation
+  setSearchCenterCoordinates
 } from "../actions";
 import getProvidersByDistance from "../selectors";
 import MapboxGeocoder from "@mapbox/mapbox-gl-geocoder";
@@ -55,7 +55,7 @@ class Map extends React.Component {
   };
 
   updateSource = type => {
-    let { distance, centerPoint centerCoordinates } = this.props .searchCenter .filters .proximity .geoboundary .georadius .area .radius .circle ;
+    let { filters, search } = this.props; 
 
     if (!this.map.getSource(type.id)) {
       this.addSourceToMap(type.id);
@@ -63,11 +63,11 @@ class Map extends React.Component {
     if (!this.map.getLayer(type.id)) {
       this.addLayerToMap(type.id);
     }
-    if (type.providers && distance) {
+    if (type.providers && filters.distance) {
       this.map.getSource(type.id).setData({
         type: "FeatureCollection",
         features: this.convertProvidersToGeoJSON(
-          getProvidersByDistance(refLocation, type.providers, distance)
+          getProvidersByDistance(search.coordinates, type.providers, filters.distance)
         )
       });
     } else {
@@ -118,7 +118,7 @@ class Map extends React.Component {
     });
 
     geocoder.on("result", ev => {
-      this.props.setRefLocation(ev.result.geometry.coordinates);
+      this.props.setSearchCenterCoordinates(ev.result.geometry.coordinates);
 
       this.removeBufferCircles("circle-outline");
       this.removeBufferCircles("circle-outline-two");
@@ -240,11 +240,6 @@ class Map extends React.Component {
     );
 
     this.loadProviderTypeImage(
-      "community-centers",
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Cat_silhouette.svg/400px-Cat_silhouette.svg.png"
-    );
-
-    this.loadProviderTypeImage(
       "cash/food-assistance",
       "https://upload.wikimedia.org/wikipedia/commons/b/b4/Webdings_x005f.png"
     );
@@ -331,6 +326,6 @@ class Map extends React.Component {
 }
 
 export default connect(
-  ({ providerTypes, filters }) => ({ providerTypes, filters }),
-  { initializeProviders, toggleProviderVisibility, setRefLocation }
+  ({ providerTypes, filters, search }) => ({ providerTypes, filters, search }),
+  { initializeProviders, toggleProviderVisibility, setSearchCenterCoordinates }
 )(Map);
